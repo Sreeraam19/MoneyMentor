@@ -1,0 +1,219 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{% static 'images/MoneyMenor - Favicon.png' %}">
+    <title>Login | MoneyMentor</title>
+    <style>
+        :root {
+            --primary: #16a34a;
+            --primary-dark: #15803d;
+            --bg-light: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --font-main: 'Inter', cursive, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-light); /* Unified light background */
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .login-wrapper {
+            display: flex;
+            width: 100%;
+            max-width: 1100px;
+            height: 650px;
+            background: var(--card-bg);
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.04);
+            border: 1px solid var(--border); /* Subtle border for definition */
+        }
+
+        /* ===========================================================
+           LEFT SIDE: SOFT MENTOR AREA
+        =========================================================== */
+        .info-side {
+            flex: 1;
+            background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 100%); /* Soft green tint */
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-right: 1px solid var(--border);
+        }
+
+        .mentor-badge {
+            display: inline-block;
+            background: #dcfce7;
+            color: var(--primary-dark);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+            width: fit-content;
+        }
+
+        .info-side h2 {
+            font-size: 2.4rem;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+
+        .info-side p {
+            font-size: 1.15rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        /* ===========================================================
+           RIGHT SIDE: CLEAN FORM
+        =========================================================== */
+        .form-side {
+            flex: 1.2;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .brand-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-main);
+            margin-bottom: 40px;
+        }
+        .brand-logo span { color: var(--primary); }
+
+        .error-box {
+            background: #fee2e2;
+            color: var(--danger);
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #fecaca;
+        }
+
+        .input-group { margin-bottom: 20px; }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-family: var(--font-main);
+            font-size: 1rem;
+            background: #f8fafc;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            background: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.08);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover { background: var(--primary-dark); }
+
+        .form-footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-dim);
+        }
+
+        .form-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        @media (max-width: 850px) {
+            .login-wrapper { flex-direction: column; height: auto; margin: 20px; border-radius: 24px; }
+            .info-side { padding: 40px; border-right: none; border-bottom: 1px solid var(--border); }
+            .form-side { padding: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-wrapper">
+        <div class="info-side">
+            <span class="mentor-badge">🧙‍♂️ Mentor Tip</span>
+            <h2>Small steps lead to big wealth.</h2>
+            <p>Your "Savings Shield" is waiting for you. Log in to see how close you are to your March goal!</p>
+        </div>
+
+        <div class="form-side">
+            <a href="{% url 'home' %}" class="brand-logo">Money<span>Mentor</span></a>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="error-box">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" name="username" placeholder="e.g. FinanceWizard" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn-submit">Sign In</button>
+            </form>
+
+            <div class="form-footer">
+                <p>New here? <a href="{% url 'signup' %}">Create account</a></p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

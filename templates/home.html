@@ -1,0 +1,634 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{% static 'images/MoneyMenor - Favicon.png' %}">
+    <title>MoneyMentor | Ultimate Financial Control</title>
+    
+    <style>
+    /* ===========================================================
+       1. CSS VARIABLES & GLOBAL RESET (LIGHT MODE)
+    =========================================================== */
+    :root {
+        /* Clean, bright, and professional light scheme */
+        --primary: #16a34a;        /* Slightly deeper green for contrast */
+        --primary-dark: #15803d;
+        --accent: #d97706;         /* Darker amber for readability */
+        --bg-light: #f8fafc;       /* Very light blue-gray background */
+        --card-bg: #ffffff;        /* Pure white cards */
+        --text-main: #1e293b;      /* Slate 800 for main text */
+        --text-dim: #64748b;       /* Slate 500 for secondary text */
+        --border: #e2e8f0;         /* Light gray borders */
+        --danger: #ef4444;
+        --success: #22c55e;
+        --glass: rgba(255, 255, 255, 0.9);
+        
+        --font-main: 'Inter', cursive, sans-serif;
+        --font-accent: 'Inter', cursive, sans-serif;
+        
+        --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        --radius: 28px;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: var(--font-main);
+        background-color: var(--bg-light);
+        color: var(--text-main);
+        line-height: 1.78;
+        overflow-x: hidden;
+        font-size: 1.08rem;
+    }
+
+    /* ===========================================================
+       2. NAVIGATION
+    =========================================================== */
+    nav {
+        width: 100%;
+        background: var(--glass);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        position: fixed;
+        top: 0;
+        z-index: 1000;
+        padding: 0 50px;
+    }
+
+    .nav-wrapper {
+        max-width: 1480px;
+        margin: 0 auto;
+        height: 90px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .brand {
+        font-family: var(--font-accent);
+        font-size: 2.25rem;
+        font-weight: 700;
+        /* Changed from var(--text-main) to pure black */
+        color: #000000; 
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        /* Changed from 16px to 0 to remove the gap between words */
+        gap: 0; 
+        letter-spacing: -1.2px;
+    }
+
+    .brand span {
+        color: var(--primary); /* This stays green */
+    }
+
+    .nav-menu {
+        display: flex;
+        gap: 44px;
+        align-items: center;
+    }
+
+    .nav-menu a {
+        text-decoration: none;
+        color: var(--text-dim);
+        font-weight: 600;
+        font-size: 1.08rem;
+        transition: color 0.3s ease;
+    }
+
+    .nav-menu a:hover {
+        color: var(--primary);
+    }
+
+    .btn-cta-nav {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: white !important;
+        padding: 15px 36px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1.08rem;
+        box-shadow: 0 6px 22px rgba(22, 163, 74, 0.2);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-cta-nav:hover {
+        transform: translateY(-4px) scale(1.05);
+        box-shadow: 0 14px 34px rgba(22, 163, 74, 0.3);
+    }
+
+    /* ===========================================================
+       3. HERO & TABLET MOCKUP
+    =========================================================== */
+    .hero-section {
+    /* Changed bottom padding from 130px to 60px */
+    padding: 160px 0 60px 0; 
+    background: radial-gradient(circle at 30% 20%, rgba(34, 197, 94, 0.1), transparent 75%);
+    }
+
+    .tablet-mockup {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        padding: 62px 58px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        display: grid;
+        grid-template-columns: 1.18fr 0.82fr;
+        gap: 78px;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-preview {
+        background: #f1f5f9; /* Soft gray for the mockup interior */
+        height: 480px;
+        border-radius: 24px;
+        border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        padding: 28px;
+        gap: 24px;
+    }
+
+    .skeleton-chart {
+        width: 100%;
+        height: 64%;
+        background: linear-gradient(90deg, #e2e8f0, #cbd5e1);
+        border-radius: 16px;
+        position: relative;
+    }
+
+    .hero-text h1 {
+        font-family: var(--font-accent);
+        font-size: 4.1rem;
+        line-height: 1.04;
+        margin-bottom: 30px;
+        font-weight: 700;
+        color: var(--text-main);
+    }
+
+    .hero-text p {
+        font-size: 1.26rem;
+        color: var(--text-dim);
+        margin-bottom: 42px;
+        max-width: 480px;
+    }
+
+    /* ===========================================================
+       4. ENGAGEMENT BAR
+    =========================================================== */
+    .engagement-bar {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        margin-top: 88px;
+    }
+
+    .engage-card {
+        text-align: center;
+        padding: 34px 20px;
+        background: var(--card-bg);
+        border-radius: 24px;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .engage-card h2 {
+        font-size: 3.25rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 10px;
+    }
+
+    .engage-card p {
+        color: var(--text-dim);
+        font-size: 0.97rem;
+        text-transform: uppercase;
+        letter-spacing: 1.6px;
+        font-weight: 500;
+    }
+
+    /* ===========================================================
+       5. FEATURES SECTION
+    =========================================================== */
+    .features-container {
+    /* Changed top padding from 140px to 40px */
+    padding: 40px 50px 80px; 
+    }
+
+    .section-title {
+        font-family: var(--font-accent);
+        font-size: 2.95rem;
+        text-align: center;
+        /* Reduced margin below title from 82px to 40px */
+        margin-bottom: 40px; 
+        color: var(--text-main);
+    }
+
+    .grid-6 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 42px;
+    }
+
+    .feature-card {
+        background: var(--card-bg);
+        padding: 52px 40px;
+        border-radius: 28px;
+        border: 1px solid var(--border);
+        transition: all 0.45s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-20px);
+        border-color: var(--primary);
+        box-shadow: 0 20px 25px -5px rgba(34, 197, 94, 0.1);
+    }
+
+    .feature-card .emoji {
+        font-size: 3.4rem;
+        margin-bottom: 28px;
+        display: block;
+    }
+
+    .feature-card h3 {
+        font-size: 1.62rem;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .feature-card p {
+        color: var(--text-dim);
+        font-size: 1.08rem;
+        line-height: 1.65;
+    }
+
+    /* ===========================================================
+       6. LOGGED-IN DASHBOARD
+    =========================================================== */
+    .main-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        margin-bottom: 56px;
+    }
+
+    .stat-pill {
+        background: var(--card-bg);
+        padding: 42px 34px;
+        border-radius: 28px;
+        border-bottom: 7px solid var(--primary);
+        box-shadow: var(--shadow);
+        transition: transform 0.3s ease;
+    }
+
+    .stat-pill:hover {
+        transform: translateY(-8px);
+    }
+
+    .stat-pill.expense {
+        border-bottom-color: var(--danger);
+    }
+
+    .stat-value {
+        font-size: 2.95rem;
+        font-weight: 800;
+        margin: 14px 0 10px;
+    }
+
+    .mentor-message {
+        background: #f0fdf4; /* Very light green */
+        padding: 46px;
+        border-radius: 28px;
+        border: 2px solid var(--primary);
+        display: flex;
+        align-items: flex-start;
+        gap: 28px;
+    }
+
+    /* ===========================================================
+       7. FAQ SECTION
+    =========================================================== */
+    .faq-wrap {
+    max-width: 940px;
+    /* Changed top margin from 130px to 40px */
+    margin: 40px auto 100px; 
+    padding: 0 30px;
+}
+
+    .faq-item {
+        background: var(--card-bg);
+        margin-bottom: 26px;
+        padding: 36px;
+        border-radius: 22px;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        transition: all 0.35s ease;
+    }
+
+    .faq-item:hover {
+        border-color: var(--accent);
+        transform: scale(1.015);
+        box-shadow: var(--shadow);
+    }
+
+    .faq-item h4 {
+        color: var(--accent);
+        margin-bottom: 16px;
+        font-size: 1.28rem;
+    }
+
+    /* ===========================================================
+       8. FINAL CTA
+    =========================================================== */
+    .cta-footer {
+        background: linear-gradient(135deg, #22c55e, #fbbf24);
+        padding: 118px 70px;
+        border-radius: 42px;
+        text-align: center;
+        margin: 110px 50px;
+        color: #ffffff;
+    }
+
+    .cta-footer h2 {
+        font-size: 3.55rem;
+        margin-bottom: 26px;
+        color: #064e3b; /* Dark green for contrast on light gradient */
+    }
+    
+    .cta-footer p {
+        color: #065f46;
+    }
+
+    /* ===========================================================
+       9. ANIMATIONS & RESPONSIVE (Remains similar)
+    =========================================================== */
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(52px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate {
+        animation: slideUp 0.95s ease forwards;
+    }
+
+    @media (max-width: 992px) {
+        .tablet-mockup, .analytics-sub-grid {
+            grid-template-columns: 1fr;
+            gap: 56px;
+        }
+        .grid-6 { grid-template-columns: repeat(2, 1fr); }
+        .engagement-bar { grid-template-columns: repeat(2, 1fr); }
+        .hero-text h1 { font-size: 3.4rem; }
+    }
+
+    @media (max-width: 640px) {
+        nav { padding: 0 22px; }
+        .nav-menu { gap: 22px; }
+        .features-container, .hero-section {
+            padding-left: 22px;
+            padding-right: 22px;
+        }
+    }
+
+    .btn-secondary {
+    padding: 22px 50px;
+    color: var(--text-main) !important; /* Forces dark text */
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.18rem;
+    border: 2px solid var(--border);
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    display: inline-block;
+    }
+
+    .btn-secondary:hover {
+        background: var(--border);
+        border-color: var(--text-dim);
+        transform: translateY(-2px);
+    }
+</style>
+
+</head>
+<body>
+
+    <nav>
+        <div class="nav-wrapper">
+            <a href="{% url 'home' %}" class="brand">Money<span>Mentor</span></a>
+            <div class="nav-menu">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'analytics_page' %}">Analytics</a>
+                <a href="{% url 'about' %}">About</a>
+                {% if user.is_authenticated %}
+                    <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" style="background:none; border:none; color:#f87171; font-weight:700; cursor:pointer; font-size:1.08rem;">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'signup' %}" class="btn-cta-nav">Get Started</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-body">
+
+        {% if user.is_authenticated %}
+        <!-- Logged-in Dashboard -->
+        <section class="hero-section" style="max-width: 1480px; margin: 0 auto; padding-left: 50px; padding-right: 50px;">
+            <div class="animate">
+                <h1 style="font-size: 2.85rem; margin-bottom: 16px;">Welcome back, {{ user.username }} 👋</h1>
+                <p style="color: var(--text-dim); font-size: 1.25rem; margin-bottom: 52px;">Here’s how your money is doing in March 2026</p>
+            </div>
+
+            <div class="main-stats animate">
+                <div class="stat-pill">
+                    <p style="font-size: 1.08rem; color: var(--text-dim);">Earnings</p>
+                    <div class="stat-value" style="color: var(--primary);">₹2,70,000</div>
+                    <p style="font-size: 0.97rem; color: var(--success);">+15% from last month</p>
+                </div>
+                <div class="stat-pill expense">
+                    <p style="font-size: 1.08rem; color: var(--text-dim);">Spendings</p>
+                    <div class="stat-value" style="color: var(--danger);">₹10,000</div>
+                    <p style="font-size: 0.97rem; color: var(--text-dim);">Well within budget</p>
+                </div>
+                <div class="stat-pill">
+                    <p style="font-size: 1.08rem; color: var(--text-dim);">Net Savings</p>
+                    <div class="stat-value" style="color: var(--accent);">₹2,60,000</div>
+                    <p style="font-size: 0.97rem; color: var(--text-dim);">Growing nicely!</p>
+                </div>
+            </div>
+
+            <div class="analytics-sub-grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 42px; margin-top: 44px;">
+                <div class="hero-preview animate" style="height: 500px;">
+                    <h3 style="margin-bottom: 26px; font-size: 1.45rem;">Spending Trends</h3>
+                    <div class="skeleton-chart">
+                        <div style="position:absolute; bottom:26px; left:12%; width:9%; height:44%; background:var(--primary); border-radius:7px;"></div>
+                        <div style="position:absolute; bottom:26px; left:28%; width:9%; height:70%; background:var(--primary); border-radius:7px;"></div>
+                        <div style="position:absolute; bottom:26px; left:44%; width:9%; height:54%; background:var(--primary); border-radius:7px;"></div>
+                        <div style="position:absolute; bottom:26px; left:60%; width:9%; height:90%; background:var(--primary); border-radius:7px;"></div>
+                        <div style="position:absolute; bottom:26px; left:76%; width:9%; height:37%; background:var(--primary); border-radius:7px;"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-around; color:var(--text-dim); font-size:0.97rem; margin-top: 22px;">
+                        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span>
+                    </div>
+                </div>
+                
+                <div class="mentor-message animate">
+                    <div style="font-size: 4rem; flex-shrink: 0;">🧙‍♂️</div>
+                    <div>
+                        <h4 style="color: var(--accent); margin-bottom: 16px; font-size: 1.4rem;">Your Mentor Says</h4>
+                        <p style="font-size: 1.08rem; line-height: 1.68;">"Excellent work! Your savings grew by 12% this month. Consider moving ₹20,000 into your emergency fund for extra peace of mind."</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 74px; text-align: center; padding: 78px 44px; border: 2px dashed var(--border); border-radius: 30px;">
+                <p style="color:var(--text-dim); font-size: 1.2rem;">No recent transactions to show right now.</p>
+                <a href="#" style="color:var(--primary); text-decoration:none; font-weight:700; font-size: 1.15rem; margin-top: 20px; display: inline-block;">+ Add your first entry</a>
+            </div>
+        </section>
+
+        {% else %}
+        <!-- Public Landing Page -->
+        <section class="hero-section">
+            <div style="max-width: 1480px; margin: 0 auto; padding: 0 50px;">
+                <div class="tablet-mockup animate">
+                    <div class="hero-text">
+                        <p style="color: var(--primary); font-weight: 700; margin-bottom: 14px; font-size: 1.18rem;">★ Trusted by over 5,000 students</p>
+                        <h1>Master Your Money With Joy</h1>
+                        <p style="font-size: 1.28rem;">Stop guessing where your money goes. Track, understand, and grow your finances with the friendliest mentor around.</p>
+                        <div style="display: flex; gap: 26px; margin-top: 46px;">
+                            <a href="{% url 'signup' %}" class="btn-cta-nav" style="padding: 22px 50px; font-size: 1.18rem;">Get Started Free</a>
+                            <a href="#features" class="btn-secondary">Learn More ↓</a>
+                        </div>
+                    </div>
+                    <div class="hero-preview">
+                        <div class="skeleton-chart"></div>
+                        <div style="height:24px; width:84%; background:var(--border); border-radius:9px; margin-top: 20px;"></div>
+                        <div style="height:24px; width:66%; background:var(--border); border-radius:9px; margin-top: 14px;"></div>
+                    </div>
+                </div>
+
+                <div class="engagement-bar animate" style="animation-delay: 0.3s;">
+                    <div class="engage-card">
+                        <h2>12k+</h2>
+                        <p>Transactions Tracked</p>
+                    </div>
+                    <div class="engage-card">
+                        <h2>98%</h2>
+                        <p>User Satisfaction</p>
+                    </div>
+                    <div class="engage-card">
+                        <h2>₹0</h2>
+                        <p>Cost to Start</p>
+                    </div>
+                    <div class="engage-card">
+                        <h2>24/7</h2>
+                        <p>Data Protection</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features-container" style="max-width: 1480px; margin: 0 auto;">
+            <h2 class="section-title animate">🚀 6 Power Features</h2>
+            <div class="grid-6">
+                <div class="feature-card animate">
+                    <span class="emoji">🧠</span>
+                    <h3>Smart Categorization</h3>
+                    <p>Automatically group your spending into "Needs" (Rent, Food), "Wants" (Entertainment, Shopping), and "Goals" (Savings, Investments).</p>
+                </div>
+                <div class="feature-card animate" style="animation-delay: 0.1s;">
+                    <span class="emoji">📊</span>
+                    <h3>Visual Analytics Hub</h3>
+                    <p>A dynamic dashboard featuring beautiful charts that show your spending trends over 7 days, 30 days, or a full year.</p>
+                </div>
+                <div class="feature-card animate" style="animation-delay: 0.2s;">
+                    <span class="emoji">🛡️</span>
+                    <h3>The Savings Shield</h3>
+                    <p>Set a monthly savings goal. MoneyMentor will calculate your "Safe-to-Spend" daily limit so you never accidentally dip into your savings.</p>
+                </div>
+                <div class="feature-card animate" style="animation-delay: 0.3s;">
+                    <span class="emoji">⚡</span>
+                    <h3>One-Click Entry</h3>
+                    <p>A streamlined mobile-friendly form to log expenses in under 5 seconds — because if tracking is hard, people won't do it.</p>
+                </div>
+                <div class="feature-card animate" style="animation-delay: 0.4s;">
+                    <span class="emoji">🔄</span>
+                    <h3>Historical Comparison</h3>
+                    <p>Compare this month's spending directly against last month to see exactly where you improved or where you slipped up.</p>
+                </div>
+                <div class="feature-card animate" style="animation-delay: 0.5s;">
+                    <span class="emoji">🌱</span>
+                    <h3>Habit Builder</h3>
+                    <p>Weekly insights that gently help you spend smarter and build real wealth over time.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq-wrap animate">
+            <h2 class="section-title" style="text-align: left; margin-bottom: 60px;">🙋‍♂️ Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <h4>Is my financial data safe?</h4>
+                <p>Absolutely. MoneyMentor uses Django’s secure authentication system and encrypted database practices to ensure only you can see your numbers.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Can I use MoneyMentor on my phone?</h4>
+                <p>Yes! The interface is built with responsive design, meaning it adjusts perfectly to your phone, tablet, or laptop screen.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Does the app connect to my bank account?</h4>
+                <p>For maximum privacy, MoneyMentor is a manual tracker. You enter your transactions yourself, giving you full control and awareness of every rupee.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Can I create my own spending categories?</h4>
+                <p>Yes. While we provide defaults like "Food" and "Transport," you can head to Settings to add custom categories like "Gaming" or "Hobby."</p>
+            </div>
+            <div class="faq-item">
+                <h4>How do the charts help me?</h4>
+                <p>Charts turn boring numbers into a story. They help you spot "hidden leaks" in your budget — like realizing you spend 40% of your income on snacks!</p>
+            </div>
+            <div class="faq-item">
+                <h4>Is MoneyMentor free to use?</h4>
+                <p>Yes, the core tracking and analytics features are completely free for all users as part of our mission to build financial literacy.</p>
+            </div>
+            <div class="faq-item">
+                <h4>What happens if I forget to log an expense?</h4>
+                <p>No problem. You can back-date transactions to any day in the past to ensure your monthly report stays accurate.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Can I export my data?</h4>
+                <p>We are working on a feature that will allow you to download your full transaction history as a CSV file for use in Excel or Google Sheets.</p>
+            </div>
+        </section>
+
+        <section class="cta-footer animate">
+            <h2>Ready to Change Your Financial Story?</h2>
+            <p style="font-size: 1.32rem; margin-bottom: 48px; opacity: 0.92;">Stop losing money to habits you can't see. Start tracking with joy today.</p>
+            <a href="{% url 'signup' %}" class="btn-cta-nav" style="background: #0a0a0a; color: #22c55e !important; padding: 24px 68px; font-size: 1.25rem;">Create My Free Account Now</a>
+        </section>
+
+        {% endif %}
+    </div>
+
+    <footer style="padding: 88px 50px; border-top: 1px solid var(--border); text-align: center; color: var(--text-dim); font-size: 1.08rem;">
+        <p>&copy; 2026 MoneyMentor. All rights reserved. | Made with love for better financial habits and happier students.</p>
+    </footer>
+
+</body>
+</html>

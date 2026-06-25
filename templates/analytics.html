@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoneyMentor Analytics</title>
+    <style>
+        /* ===========================================================
+           1. FINTECH DESIGN SYSTEM (REFINED SPACING)
+        =========================================================== */
+        :root {
+            --primary: #16a34a;
+            --primary-light: #f0fdf4;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --accent: #f59e0b;
+            --space-sm: 16px;
+            --space-md: 24px;
+            --space-lg: 40px;
+            --radius: 20px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); padding-top: 100px; }
+
+        /* ===========================================================
+           2. NAVIGATION
+        =========================================================== */
+        nav { width: 100%; background: #fff; border-bottom: 1px solid var(--border); position: fixed; top: 0; z-index: 1000; }
+        .nav-inner { max-width: 1200px; margin: 0 auto; height: 80px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .brand { font-size: 1.5rem; font-weight: 800; text-decoration: none; color: #000; }
+        .brand span { color: var(--primary); }
+        .nav-links a { margin-left: 25px; text-decoration: none; color: var(--text-dim); font-weight: 600; font-size: 0.9rem; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+        .sub-nav { display: flex; gap: var(--space-md); margin-bottom: var(--space-lg); border-bottom: 1px solid var(--border); overflow-x: auto; }
+        .sub-nav a { text-decoration: none; color: var(--text-dim); padding: 12px 0; font-weight: 600; font-size: 0.85rem; white-space: nowrap; }
+        .sub-nav a.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
+
+        /* ===========================================================
+           3. SHARED COMPONENTS
+        =========================================================== */
+        .card { background: var(--card); padding: 32px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: var(--space-md); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-md); }
+        .btn-main { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+        
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-md); margin-bottom: var(--space-lg); }
+        .stat-label { font-size: 0.8rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; }
+        .stat-value { font-size: 1.8rem; font-weight: 800; }
+
+        /* Tables & Lists */
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; color: var(--text-dim); font-size: 0.8rem; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+        td { padding: 15px 0; font-size: 0.95rem; border-bottom: 1px solid #f1f5f9; }
+
+        /* Charts & Progress */
+        .progress-track { background: #f1f5f9; height: 12px; border-radius: 6px; margin: 15px 0; position: relative; }
+        .progress-fill { background: var(--primary); height: 100%; border-radius: 6px; }
+        .chart-placeholder { width: 100px; height: 100px; border-radius: 50%; border: 12px solid var(--primary-light); border-top-color: var(--primary); margin: 0 auto 10px; }
+
+        /* ===========================================================
+           4. MODALS (SPACING FIXED)
+        =========================================================== */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-box { background: white; width: 90%; max-width: 500px; padding: var(--space-lg); border-radius: var(--radius); }
+        .form-group { margin-bottom: var(--space-md); }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 700; color: var(--text-dim); font-size: 0.85rem; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; }
+        
+        .type-selector { display: flex; gap: 10px; margin-bottom: var(--space-md); }
+        .type-btn { flex: 1; padding: 10px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; background: #fff; font-weight: 600; }
+        .type-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-inner">
+            <a href="#" class="brand">Money<span>Mentor</span></a>
+            <div class="nav-links">
+                <a href="#">Home</a><a href="#" style="color:var(--primary)">Analytics</a><a href="#">About</a><a href="#">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="sub-nav">
+            <a href="#" class="active" onclick="showPage('home')">Analytics Home</a>
+            <a href="#" onclick="showPage('details')">Details</a>
+            <a href="#" onclick="showPage('mgmt')">Money Management</a>
+            <a href="#" onclick="showPage('goals')">Goals</a>
+            <a href="#" onclick="showPage('budget')">Budget</a>
+        </div>
+
+        <!-- ================= HOME ================= -->
+        <section id="page-home" class="page">
+            <div id="month-display" style="text-align:center; font-weight: 800; margin-bottom: var(--space-md);">
+                Loading...
+            </div>
+
+            <div class="grid-3" style="grid-template-columns: 1fr 1fr;">
+                <div class="card">
+                    <div class="stat-label">↓ Income</div>
+                    <div class="stat-value" id="income-value">0</div>
+                </div>
+                <div class="card">
+                    <div class="stat-label">↑ Expense</div>
+                    <div class="stat-value" id="expense-value">0</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="section-header">
+                    <h3>Daily Tracker <small style="font-weight:400; color:var(--text-dim)" id="daily-month-label"></small></h3>
+                    <button class="btn-main" onclick="openModal('modal-home')">+</button>
+                </div>
+
+                <div id="daily-tracker-container"></div>
+            </div>
+
+            <div class="card">
+                <h3>Monthly Tracker</h3>
+                <p style="margin: 10px 0;" id="monthly-label"></p>
+
+                <div class="grid-3" style="text-align:center; border-top: 1px solid var(--border); padding-top: 15px;">
+                    <div>
+                        <p class="stat-label">Income</p>
+                        <p id="monthly-income" style="color:var(--primary)"></p>
+                    </div>
+                    <div>
+                        <p class="stat-label">Expense</p>
+                        <p id="monthly-expense" style="color:var(--danger)"></p>
+                    </div>
+                    <div>
+                        <p class="stat-label">Total</p>
+                        <p id="monthly-total" style="font-weight:800;"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= DETAILS ================= -->
+
+        <section id="page-details" class="page hidden">
+            <div class="card">
+                <label style="font-weight:800; display:block; margin-bottom: 15px;">Enter your Income:</label>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span style="font-size: 1.5rem;">₹</span>
+                    <input type="number" style="border:none; border-bottom: 2px solid var(--text); font-size: 1.5rem; width: 200px; outline:none;">
+                </div>
+            </div>
+            <div class="card">
+                <div class="section-header"><h3>Categories</h3><button class="btn-main" onclick="openModal('modal-cat')">Add categories</button></div>
+                <div style="height: 60px; border-bottom: 1px solid var(--border);"></div>
+            </div>
+            <div class="card">
+                <div class="section-header"><h3>Sub-Categories</h3><button class="btn-main" onclick="openModal('modal-cat')">Add sub-categories</button></div>
+                <div style="height: 60px; border-bottom: 1px solid var(--border);"></div>
+            </div>
+        </section>
+
+        <!-- ================= MANAGEMENT ================= -->
+
+        <section id="page-mgmt" class="page hidden">
+            <div class="grid-3">
+                <div class="card"><div class="stat-label">Income ↓</div><div class="stat-value">7,00,000</div></div>
+                <div class="card"><div class="stat-label">Expense ↑</div><div class="stat-value">5,00,000</div></div>
+                <div class="card"><div class="stat-label">Savings</div><div class="stat-value">2,00,000</div></div>
+            </div>
+            <div class="grid-3" style="grid-template-columns: 1.5fr 1fr;">
+                <div class="card">
+                    <div style="display:flex; justify-content:space-around;">
+                        <div style="text-align:center;"><div class="chart-placeholder"></div><p>Income</p></div>
+                        <div style="text-align:center;"><div class="chart-placeholder" style="border-top-color:var(--danger)"></div><p>Expense</p></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <p style="font-weight:700;">Line graphs</p>
+                    <div style="height:80px; border-bottom: 2px solid var(--border); position:relative; margin-top:10px;">
+                        <div style="position:absolute; bottom:0; width:100%; height:60%; background:linear-gradient(to top right, #dcfce7, transparent); clip-path: polygon(0 100%, 20% 40%, 50% 70%, 80% 20%, 100% 100%);"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="background:var(--primary-light); border-left: 5px solid var(--primary);">
+                <h4 style="color:var(--primary)">Mentor Insights.</h4>
+                <p style="margin-top:10px; font-size: 0.9rem;">You have saved 28% of your income. Consider diversifying into a mutual fund.</p>
+            </div>
+            <div class="grid-3" style="grid-template-columns: 1fr 1fr;">
+                <div class="card"><h3>Summary</h3></div>
+                <div class="card"><h3>Projected Timeline</h3></div>
+            </div>
+        </section>
+
+        <section id="page-goals" class="page hidden">
+            <div class="section-header"><h2>Goals</h2><button class="btn-main" onclick="openModal('modal-goal')">+ Add Goal</button></div>
+            <div class="card">
+                <div style="display:flex; justify-content:space-between;">
+                    <h3 style="margin-bottom:10px;">i) New Car</h3>
+                    <button style="border:none; background:none; cursor:pointer;">☒</button>
+                </div>
+                <p style="color:var(--text-dim)">Amt: 7,00,000</p>
+                <p style="color:var(--text-dim)">Collected: 5,00,000</p>
+                <div class="progress-track"><div class="progress-fill" style="width: 71%;"></div></div>
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700;">
+                    <span>0</span><span>5,00,000</span><span>7,00,000</span>
+                </div>
+            </div>
+            <p style="font-size:0.85rem; color:var(--text-dim); text-align:center; margin-top:20px;">After goal is achieved, MoneyMentor appreciates and notifies the user.</p>
+        </section>
+
+        <section id="page-budget" class="page hidden">
+            <div class="section-header"><h2>Monthly Budgets</h2><button class="btn-main" onclick="openModal('modal-budget')">Set Budget</button></div>
+            <div class="card">
+                <table>
+                    <tr><th>Category</th><th>Limit</th><th>Spent</th><th>Status</th></tr>
+                    <tr><td>Food</td><td>10,000</td><td>8,000</td><td><div class="progress-track" style="height:6px; width:100px;"><div class="progress-fill" style="width:80%; background:var(--accent)"></div></div></td></tr>
+                </table>
+            </div>
+        </section>
+    </div>
+
+<div class="modal-overlay" id="modal-home">
+    <div class="modal-box">
+
+        <h3 style="margin-bottom:var(--space-md)">Add Transaction</h3>
+
+        <form id="transaction-form">
+
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" name="date" required>
+            </div>
+
+            <div class="form-group">
+                <label>Type</label>
+                <select name="type">
+                    <option value="INCOME">Income</option>
+                    <option value="EXPENSE">Expense</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Amount</label>
+                <input type="number" name="amount" required>
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <input type="text" name="category">
+            </div>
+
+            <div class="form-group">
+                <label>Subcategory</label>
+                <input type="text" name="subcategory">
+            </div>
+
+            <div class="form-group">
+                <label>Note</label>
+                <input type="text" name="note">
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:var(--space-lg)">
+                <button class="btn-main" type="submit" style="flex:1">Enter</button>
+                <button type="button"
+                        class="btn-main"
+                        style="flex:1; background:#f1f5f9; color:var(--text-dim)"
+                        onclick="closeModals()">
+                    Cancel
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+    <div class="modal-overlay" id="modal-cat">
+        <div class="modal-box">
+            <h3 style="margin-bottom:var(--space-md)">Add Category & Sub-cats</h3>
+            <div class="form-group"><label>Category Name:</label><input type="text" placeholder="e.g. Food"></div>
+            <div class="form-group"><label>Sub-categories:</label>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <div style="display:flex; align-items:center; gap:8px;"><span style="font-weight:700;">i)</span><input type="text" placeholder="Sub-cat 1"></div>
+                    <div style="display:flex; align-items:center; gap:8px;"><span style="font-weight:700;">ii)</span><input type="text" placeholder="Sub-cat 2"></div>
+                </div>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:var(--space-lg)">
+                <button class="btn-main" style="flex:1">Enter</button><button class="btn-main" style="flex:1; background:#f1f5f9; color:var(--text-dim)" onclick="closeModals()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-budget">
+        <div class="modal-box">
+            <h3 style="margin-bottom:var(--space-md)">Set Monthly Budget</h3>
+            <div class="form-group"><label>Select Category:</label><input type="text" placeholder="e.g. Food"></div>
+            <div class="form-group"><label>Select Sub-category:</label><input type="text" placeholder="e.g. Lunch"></div>
+            <div class="form-group"><label>Limit Amount:</label><input type="number"></div>
+            <div style="display:flex; gap:10px; margin-top:var(--space-lg)">
+                <button class="btn-main" style="flex:1">Enter</button><button class="btn-main" style="flex:1; background:#f1f5f9; color:var(--text-dim)" onclick="closeModals()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-goal">
+        <div class="modal-box">
+            <h3 style="margin-bottom:var(--space-md)">Add Goal Pop-up</h3>
+            <div class="form-group"><label>Enter Date:</label><input type="date"></div>
+            <div class="form-group"><label>Enter Goal Name:</label><input type="text"></div>
+            <div class="form-group"><label>Enter Goal Amt:</label><input type="number"></div>
+            <div class="form-group"><label>Enter Amt Collected:</label><input type="number"></div>
+            <div style="display:flex; gap:10px; margin-top:var(--space-lg)">
+                <button class="btn-main" style="flex:1">Enter</button><button class="btn-main" style="flex:1; background:#f1f5f9; color:var(--text-dim)" onclick="closeModals()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+
+    // ===============================
+    // 1. PAGE NAVIGATION
+    // ===============================
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+        document.getElementById('page-' + id).classList.remove('hidden');
+
+        document.querySelectorAll('.sub-nav a').forEach(a => a.classList.remove('active'));
+        event.target.classList.add('active');
+
+        if (id === "home") {
+            loadAnalytics();
+        }
+    }
+
+
+    // ===============================
+    // 2. MODALS
+    // ===============================
+    function openModal(id) {
+        document.getElementById(id).style.display = 'flex';
+    }
+
+    function closeModals() {
+        document.querySelectorAll('.modal-overlay')
+            .forEach(m => m.style.display = 'none');
+    }
+
+
+    // ===============================
+    // 3. FETCH ANALYTICS DATA
+    // ===============================
+    async function loadAnalytics() {
+        try {
+            const res = await fetch("{% url 'analytics_api' %}");
+            const data = await res.json();
+
+            // === SUMMARY ===
+            document.getElementById('income-value').innerText =
+                "+ " + Number(data.summary.income).toLocaleString();
+
+            document.getElementById('expense-value').innerText =
+                "- " + Number(data.summary.expense).toLocaleString();
+
+            document.getElementById('monthly-income').innerText =
+                "+ " + Number(data.summary.income).toLocaleString();
+
+            document.getElementById('monthly-expense').innerText =
+                "- " + Number(data.summary.expense).toLocaleString();
+
+            document.getElementById('monthly-total').innerText =
+                Number(data.summary.savings).toLocaleString();
+
+
+            // === DAILY TRACKER (TABLE STYLE) ===
+            const container = document.getElementById('daily-tracker-container');
+
+            let html = `
+                <table>
+                    <tr>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Sub cat</th>
+                        <th>Amount</th>
+                        <th>Note</th>
+                    </tr>
+            `;
+
+            for (const date in data.daily_data) {
+                const txns = data.daily_data[date];
+
+                txns.forEach(t => {
+                    const color = t.type === "INCOME" ? "var(--primary)" : "var(--danger)";
+                    const sign = t.type === "INCOME" ? "+" : "-";
+
+                    html += `
+                    <tr>
+                        <td>${date}</td>
+                        <td>${t.category}</td>
+                        <td>${t.subcategory || "-"}</td>
+                        <td style="color:${color}">
+                            ${sign} ${Number(t.amount).toLocaleString()}
+                        </td>
+                        <td>${t.note || "-"}</td>
+                    </tr>
+                    `;
+                });
+            }
+
+            html += `</table>`;
+            container.innerHTML = html;
+
+        } catch (err) {
+            console.error("Error loading analytics:", err);
+        }
+    }
+
+
+    // ===============================
+    // 4. ADD TRANSACTION (POPUP FORM)
+    // ===============================
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const form = document.getElementById("transaction-form");
+
+        if (form) {
+            form.addEventListener("submit", async function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+
+                try {
+                    const res = await fetch("{% url 'add_transaction' %}", {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': getCSRFToken()
+                        }
+                    });
+
+                    const data = await res.json();
+
+                    if (data.status === "success") {
+                        closeModals();
+                        loadAnalytics();   // 🔥 refresh data
+                        form.reset();
+                    } else {
+                        alert("Failed to save transaction.");
+                    }
+
+                } catch (err) {
+                    console.error("Error saving transaction:", err);
+                    alert("Something went wrong.");
+                }
+            });
+        }
+
+        // Initial load
+        loadAnalytics();
+    });
+
+
+    // ===============================
+    // 5. CSRF TOKEN HELPER
+    // ===============================
+    function getCSRFToken() {
+        return document.cookie
+            .split('; ')
+            .find(row => row.startsWith('csrftoken='))
+            ?.split('=')[1];
+    }
+
+</script>
+
+</body>
+</html>

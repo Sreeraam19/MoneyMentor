@@ -1,0 +1,252 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{% static 'images/MoneyMenor - Favicon.png' %}">
+    <title>Join MoneyMentor | Start Your Journey</title>
+    <style>
+        :root {
+            --primary: #16a34a;
+            --primary-dark: #15803d;
+            --bg-light: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --font-main: 'Inter', cursive, sans-serif;
+            --danger: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .signup-card {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            border-radius: 40px;
+            padding: 50px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+        }
+
+        .brand-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-main);
+            display: block;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .brand-logo span { color: var(--primary); }
+
+        .header-area { text-align: center; margin-bottom: 40px; }
+        .header-area h1 { font-size: 2.2rem; margin-bottom: 10px; }
+        .header-area p { color: var(--text-dim); }
+
+        /* Error Messages */
+        .error-alert {
+            background: #fee2e2;
+            color: var(--danger);
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            text-align: center;
+            border: 1px solid #fecaca;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* Step-by-Step Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .full-width { grid-column: span 2; }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            font-family: var(--font-main);
+            font-size: 1rem;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            background: #fff;
+            border-color: var(--primary);
+        }
+
+        /* Border Glow Validation */
+        .valid-input { border-color: var(--primary) !important; box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1); }
+
+        /* Goal Selector */
+        .goal-section { margin: 30px 0; }
+        .goal-options {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        .goal-pill {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        .goal-pill:hover { border-color: var(--primary); color: var(--primary); }
+        
+        input[type="radio"] { display: none; }
+        input[type="radio"]:checked + .goal-pill {
+            background: #dcfce7;
+            border-color: var(--primary);
+            color: var(--primary-dark);
+        }
+
+        .btn-signup {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 18px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        .btn-signup:hover { transform: translateY(-2px); background: var(--primary-dark); }
+
+        .footer { text-align: center; margin-top: 24px; color: var(--text-dim); }
+        .footer a { color: var(--primary); text-decoration: none; font-weight: 700; }
+
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .signup-card { padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="signup-card">
+        <a href="{% url 'home' %}" class="brand-logo">Money<span>Mentor</span></a>
+        
+        <div class="header-area">
+            <h1>Create Your Account</h1>
+            <p>Join 5,000+ students mastering their money.</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="error-alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-grid">
+                <div class="full-width">
+                    <label>Full Name</label>
+                    <input type="text" name="name" placeholder="John Doe" required>
+                </div>
+
+                <div class="full-width">
+                    <label>Date of Birth</label>
+                    <input type="date" name="dob" required>
+                </div>
+
+                <div>
+                    <label>Username</label>
+                    <input type="text" name="username" placeholder="finance_wiz" required>
+                </div>
+
+                <div>
+                    <label>Email Address</label>
+                    <input type="email" name="email" placeholder="john@example.com" required>
+                </div>
+
+                <div>
+                    <label>Password</label>
+                    <input type="password" name="pass1" id="pass1" placeholder="••••••••" required>
+                </div>
+
+                <div>
+                    <label>Confirm Password</label>
+                    <input type="password" name="pass2" id="pass2" placeholder="••••••••" required>
+                </div>
+            </div>
+
+            <div class="goal-section">
+                <label>What is your primary financial goal?</label>
+                <div class="goal-options">
+                    <label>
+                        <input type="radio" name="goal" value="saving" checked>
+                        <div class="goal-pill">💰 Saving</div>
+                    </label>
+                    <label>
+                        <input type="radio" name="goal" value="tracking">
+                        <div class="goal-pill">📊 Tracking</div>
+                    </label>
+                    <label>
+                        <input type="radio" name="goal" value="investing">
+                        <div class="goal-pill">📈 Investing</div>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-signup">Create Account</button>
+        </form>
+
+        <div class="footer">
+            <p>Already have an account? <a href="{% url 'login' %}">Log In</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Real-time Border Validation for Password
+        const pass1 = document.getElementById('pass1');
+        pass1.addEventListener('input', () => {
+            if (pass1.value.length >= 8) {
+                pass1.classList.add('valid-input');
+            } else {
+                pass1.classList.remove('valid-input');
+            }
+        });
+    </script>
+
+</body>
+</html>

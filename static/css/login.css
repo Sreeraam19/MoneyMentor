@@ -1,0 +1,11 @@
+.login-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 80vh;
+}
+
+.form-card {
+    background: var(--card);
+    padding: 30px;
+    border-radius: 15px;
+}
